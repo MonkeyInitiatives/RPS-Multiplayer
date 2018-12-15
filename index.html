@@ -140,7 +140,10 @@
                         $("#rock").hide();  
                         $("#paper").hide();  
                         $("#scissors").hide();  
-                        $("#game-stats").text(snapshot.val().players[Object.keys(snapshot.val().players)[0]].username + " used " + snapshot.val().players[Object.keys(snapshot.val().players)[0]].playerChoice + " and " + snapshot.val().players[Object.keys(snapshot.val().players)[1]].username + " used " + snapshot.val().players[Object.keys(snapshot.val().players)[1]].playerChoice+". ");
+                        
+                        choiceTranslation
+                        // $("#game-stats").text(snapshot.val().players[Object.keys(snapshot.val().players)[0]].username + " used " + snapshot.val().players[Object.keys(snapshot.val().players)[0]].playerChoice + " and " + snapshot.val().players[Object.keys(snapshot.val().players)[1]].username + " used " + snapshot.val().players[Object.keys(snapshot.val().players)[1]].playerChoice+". ");
+                        $("#game-stats").text(snapshot.val().players[Object.keys(snapshot.val().players)[0]].username + " used " + choiceTranslation(snapshot.val().players[Object.keys(snapshot.val().players)[0]].playerChoice) + " and " + snapshot.val().players[Object.keys(snapshot.val().players)[1]].username + " used " + choiceTranslation(snapshot.val().players[Object.keys(snapshot.val().players)[1]].playerChoice)+". ");
 
                         //set photo after both have picked
                         setTimeout( function timer(){
@@ -236,6 +239,19 @@
             }, function(errorObject) {
             console.log("The read failed: " + errorObject.code);
         });
+
+
+        function choiceTranslation(str1){
+            if(str1=="rock"){
+                return "Atari";
+            }
+            else if(str1=="paper"){
+                return "Wallace";
+            }
+            else{
+                return "Tyrell";
+            }
+        }
 
         //write to firebase wins/losses
         function winLoss(player, opponent, outcome){

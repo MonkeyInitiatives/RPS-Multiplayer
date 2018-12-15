@@ -17,10 +17,13 @@ body{
       -1px 1px 0 #000,
       1px 1px 0 #000;  */
   }
-  .wrapper{
+.wrapper{
     position: relative;
     top: 0%;
     transform: translateY(20%);
+}
+img {
+    border-radius: 25%;
   }
 #chatComment, #submit{
     color: black;
