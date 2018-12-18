@@ -91,12 +91,13 @@
             }
             if(snapshot.hasChild("players")==false){
                 console.log("There are no players. Make Player One");
-                if(sessionStorage.getItem("username")==null)
+                if(sessionStorage.getItem("username")==null&&numberOfPlayers==0)
                 {
                     console.log("creating player one");
                     var player = prompt("Please enter your name", "");
                     sessionStorage.clear();
                     sessionStorage.setItem("username", player);
+                    sessionStorage.setItem("chatname", player);
                     writeUserData(player, "0", "0", "");
                 }
             }
@@ -111,14 +112,21 @@
                 if(sessionStorage.getItem("username")==null&&numberOfPlayers==1)
                 {
                     var player = prompt("Please enter your name", "");
-                    writeUserData(player, "0", "0", "");
                     sessionStorage.clear();
                     sessionStorage.setItem("username", player);
+                    sessionStorage.setItem("chatname", player);
+                    writeUserData(player, "0", "0", "");
                 }
                 //TODO player.username is undefined for some reason. maybe timeout is needed? 
                 for(var i=0; i<numberOfPlayers; i++){
                     var player = snapshot.val().players[Object.keys(snapshot.val().players)[i]];
                     $("#player"+(i+1)+"-name").text(player.username + ": Wins: " +player.wins + " Losses: "+ player.losses);
+                }
+                console.log("this is the number of players supposedly "+numberOfPlayers);
+                if(numberOfPlayers==2 && sessionStorage.getItem("chatname")==null){
+                    var chatPlayer = prompt("Please enter your name for the chat", "");
+                    sessionStorage.clear();
+                    sessionStorage.setItem("chatname", chatPlayer);
                 }
                 //there are two players so get player/opponent and start game.
                 if(numberOfPlayers==2){
@@ -279,65 +287,92 @@
         function pad(n) {
             return n<10 ? '0'+n : n;
         }
+
         $(window).on("unload", function(e) {
             event.preventDefault();
-            var dt = new Date();
-            var theTime = "("+pad(dt.getHours()) + ":" + pad(dt.getMinutes()) + ":" + pad(dt.getSeconds())+")";
-            $("#chat-room").prepend("<p>"+sessionStorage.getItem("username") +" "+ theTime +": " +"Goodbye!" +"</p>");
-            // console.log($("#chat-room").html());
-            // console.log("submit");
-            firebase.database().ref('chat/').set({
-                chatRoom: $("#chat-room").html()
-            });
-            $("#chatComment").val("");
-            firebase.database().ref('players/' + sessionStorage.getItem("username")).remove();
+            if(sessionStorage.getItem("username")!=null){
+                var dt = new Date();
+                var theTime = "("+pad(dt.getHours()) + ":" + pad(dt.getMinutes()) + ":" + pad(dt.getSeconds())+")";
+                $("#chat-room").prepend("<p>"+sessionStorage.getItem("username") +" "+ theTime +": " +"Goodbye!" +"</p>");
+                firebase.database().ref('chat/').set({
+                    chatRoom: $("#chat-room").html()
+                });
+                $("#chatComment").val("");
+                firebase.database().ref('players/' + sessionStorage.getItem("username")).remove();
+            }
+            if(numberOfPlayers==1){
+                $("#chat-room").empty();
+                firebase.database().ref('chat/').set({
+                    chatRoom: $("#chat-room").html()
+                });
+                $("#chatComment").val("");
+            }
         });
         $("#rock").on("click", function(event) {
-            console.log($(this).attr('id'));
-            database.ref("players/"+sessionStorage.getItem("username")+"/playerChoice").set($(this).attr('id'));
-            if($("#player1-name:contains('"+sessionStorage.getItem("username")+"')").length)
-            {
-                $("#player1-name").append("<img src='rock.png' id='player1choice' alt='rock' height='150' width='150'>");
-
-            }
-            else{
-                $("#player2-name").append("<img src='rock.png' id='player2choice' alt='rock' height='150' width='150'>");
+            if(sessionStorage.getItem("username")!=null){
+                console.log($(this).attr('id'));
+                database.ref("players/"+sessionStorage.getItem("username")+"/playerChoice").set($(this).attr('id'));
+                console.log(typeof $("#player1choice").attr("src") === "undefined");
+                if($("#player1-name:contains('"+sessionStorage.getItem("username")+"')").length)
+                {
+                    if(typeof $("#player1choice").attr("src") === "undefined"){
+                        $("#player1-name").append("<img src='rock.png' id='player1choice' alt='rock' height='150' width='150'>");
+                    }
+                }
+                else{
+                    if(typeof $("#player2choice").attr("src") === "undefined"){
+                        $("#player2-name").append("<img src='rock.png' id='player2choice' alt='rock' height='150' width='150'>");
+                    }
+                }
             }
         });
         $("#paper").on("click", function(event) {
-            console.log($(this).attr('id'));
-            database.ref("players/"+sessionStorage.getItem("username")+"/playerChoice").set($(this).attr('id'));
-            if($("#player1-name:contains('"+sessionStorage.getItem("username")+"')").length)
-            {
-                $("#player1-name").append("<img src='paper.png' id='player1choice' alt='paper' height='150' width='150'>");
-
-            }
-            else{
-                $("#player2-name").append("<img src='paper.png' id='player2choice' alt='paper' height='150' width='150'>");
+            if(sessionStorage.getItem("username")!=null){
+                console.log($(this).attr('id'));
+                database.ref("players/"+sessionStorage.getItem("username")+"/playerChoice").set($(this).attr('id'));
+                if($("#player1-name:contains('"+sessionStorage.getItem("username")+"')").length)
+                {
+                    if(typeof $("#player1choice").attr("src") === "undefined"){
+                        $("#player1-name").append("<img src='paper.png' id='player1choice' alt='paper' height='150' width='150'>");
+                    }
+                }
+                else{
+                    if(typeof $("#player2choice").attr("src") === "undefined"){
+                        $("#player2-name").append("<img src='paper.png' id='player2choice' alt='paper' height='150' width='150'>");
+                    }
+                }
             }
         });
         $("#scissors").on("click", function(event) {
-            console.log($(this).attr('id'));
-            database.ref("players/"+sessionStorage.getItem("username")+"/playerChoice").set($(this).attr('id'));
-            if($("#player1-name:contains('"+sessionStorage.getItem("username")+"')").length)
-            {
-                $("#player1-name").append("<img src='scissors.png' id='player1choice' alt='scissors' height='150' width='150'>");
-
-            }
-            else{
-                $("#player2-name").append("<img src='scissors.png' id='player2choice' alt='scissors' height='150' width='150'>");
-            }        });
+            if(sessionStorage.getItem("username")!=null){
+                console.log($(this).attr('id'));
+                database.ref("players/"+sessionStorage.getItem("username")+"/playerChoice").set($(this).attr('id'));
+                if($("#player1-name:contains('"+sessionStorage.getItem("username")+"')").length)
+                {
+                    if(typeof $("#player1choice").attr("src") === "undefined"){
+                        $("#player1-name").append("<img src='scissors.png' id='player1choice' alt='scissors' height='150' width='150'>");
+                    }
+                }
+                else{
+                    if(typeof $("#player2choice").attr("src") === "undefined"){
+                        $("#player2-name").append("<img src='scissors.png' id='player2choice' alt='scissors' height='150' width='150'>");
+                    }
+                }
+            }        
+        });
         $("#submit").on("click", function(event) {
             event.preventDefault();
-            var dt = new Date();
-            var theTime = "("+pad(dt.getHours()) + ":" + pad(dt.getMinutes()) + ":" + pad(dt.getSeconds())+")";
-            $("#chat-room").prepend("<p>"+sessionStorage.getItem("username") +" "+ theTime +": " + $("#chatComment").val().trim()+"</p>");
-            // console.log($("#chat-room").html());
-            // console.log("submit");
-            firebase.database().ref('chat/').set({
-                chatRoom: $("#chat-room").html()
-            });
-            $("#chatComment").val("");
+            if(sessionStorage.getItem("username")!=null||sessionStorage.getItem("chatname")!=null){
+                var dt = new Date();
+                var theTime = "("+pad(dt.getHours()) + ":" + pad(dt.getMinutes()) + ":" + pad(dt.getSeconds())+")";
+                $("#chat-room").prepend("<p>"+sessionStorage.getItem("chatname") +" "+ theTime +": " + $("#chatComment").val().trim()+"</p>");
+                // console.log($("#chat-room").html());
+                // console.log("submit");
+                firebase.database().ref('chat/').set({
+                    chatRoom: $("#chat-room").html()
+                });
+                $("#chatComment").val("");
+            }
         });
         
         function writeUserData(name, wins, losses, playerChoice) {
@@ -350,6 +385,8 @@
         }
         
 
+    
+
     </script>
 </body>
-</html>
+</html>hjkfda
