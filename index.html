@@ -64,6 +64,9 @@
             </div>
         </div>
     </div>
+
+    <button type="button" id="quit-button">Quit</button>
+
 </div>
 
         
@@ -373,6 +376,28 @@
                 });
                 $("#chatComment").val("");
             }
+        });
+
+        $("#quit-button").on("click", function(event) {
+            event.preventDefault();
+            if(sessionStorage.getItem("username")!=null){
+                var dt = new Date();
+                var theTime = "("+pad(dt.getHours()) + ":" + pad(dt.getMinutes()) + ":" + pad(dt.getSeconds())+")";
+                $("#chat-room").prepend("<p>"+sessionStorage.getItem("username") +" "+ theTime +": " +"Goodbye!" +"</p>");
+                firebase.database().ref('chat/').set({
+                    chatRoom: $("#chat-room").html()
+                });
+                $("#chatComment").val("");
+                firebase.database().ref('players/' + sessionStorage.getItem("username")).remove();
+            }
+            if(numberOfPlayers==1){
+                $("#chat-room").empty();
+                firebase.database().ref('chat/').set({
+                    chatRoom: $("#chat-room").html()
+                });
+                $("#chatComment").val("");
+            }
+            window.close();
         });
         
         function writeUserData(name, wins, losses, playerChoice) {
