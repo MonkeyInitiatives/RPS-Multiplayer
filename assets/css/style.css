@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'pirulen';
-    src: url('pirulen.woff') format('woff2'),
-         url('pirulen.woff') format('woff');
+    src: url('../fonts/pirulen.woff') format('woff2'),
+         url('../fonts/pirulen.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
@@ -11,30 +11,26 @@ body{
 *{
     color: white;
     font-family: pirulen;
-    /* text-shadow:
-      -1px -1px 0 #000,
-      1px -1px 0 #000,
-      -1px 1px 0 #000,
-      1px 1px 0 #000;  */
-  }
+}
 .wrapper{
-    position: relative;
-    top: 0%;
-    transform: translateY(20%);
+    background: url("../images/background.jpg");
 }
 img {
     border-radius: 25%;
-  }
-#chatComment, #submit{
+}
+#chatComment, #submit, #quit-button{
     color: black;
     font-family: pirulen;
+}
+#quit-button{
+    text-align: center;
+    margin: auto;
 }
 #scissors, #paper, #rock, #player1-name, #player2-name{
     text-align: center;
     width: 50%;
     margin: 0 auto;
 }
-#chat-form{
-    /* width: 50%;
-    margin: 0 auto; */
+#game-stats{
+    margin: 0 auto;
 }
