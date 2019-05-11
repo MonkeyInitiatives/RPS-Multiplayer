@@ -4,6 +4,10 @@
 
 This Rock Paper Scissors game is inspired by the movie Blade Runner. Instead of fighting with rock, paper, or scissors, a player instead chooses one of three corporations (Atari, Wallace, or Tyrell). When a player first loads the page, they are greeted with a prompt asking for their name. If there are less than 2 players on the site, the player is allowed to play the game. Any players joining after the initial two are allowed to watch the game be played and chat in the chatroom, but they do not get to play the game. After both players select their choice, the game updates one another to display both choices and determine the round winner. After a brief period, the game returns to its natural state and allows the players to pick their choices again. When a player is done playing the game, they are encouraged to press the quit button at the bottom of the page and then close the browser window. When both players have left, the chat should be erased and all players should be removed from the game.
 
+## Technologies
+
+Firebase, CSS, HTML, Bootstrap, Javascript, and Jquery. 
+
 ## Notes
 
 This was challenging. The code logic works, with wins, losses, and ties being fine. The chatroom works well, where player names and timestamps are written and displayed and updated whenever a new chat comment is submitted. A player can only chat if they entered in a user name when prompted. Moreover, the chat name is stored as session storage so if they leave the page and return, they can choose their name again. The site is mobile responsive and I tested it on my iPad. I used a timer to automatically advance to the next round of the game after 7 seconds, and only after both players have chosen their selection does the game update both players so they can see what the other player chose for their selection. All and all, I think it works as intended.
